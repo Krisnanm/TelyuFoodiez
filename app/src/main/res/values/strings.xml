@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">FoodFusion</string>
+    <string name="app_logo">App logo</string>
+    <string name="phone_number">Phone Number</string>
+    <string name="phone_logo">phone logo</string>
+    <string name="login_button">Login</string>
+    <string name="register_button">Register</string>
+    <string name="no_account">Don’t have an account?</string>
+    <string name="have_account">Have an account?</string>
+    <string name="name">Name</string>
+    <string name="sign_up_button">Sign Up</string>
+    <string name="sign_in_button">Sign In</string>
+    <string name="headline_dashboard">What do you want to eat?</string>
+    <string name="food_image">Makanan</string>
+    <string name="shop_name">Warung Sambal Bakar</string>
+    <string name="shop_time_open">Buka 8:00 - 20:00</string>
+    <string name="serve_time">20 mins</string>
+    <string name="greetings">Hello, Nama</string>
+    <string name="address">Alamat</string>
+    <string name="complete_address">Gedung Asrama 5, No Kamar 20</string>
+    <string name="dropdown_button">dropdown_button</string>
+    <string name="search_icon">search_icon</string>
+    <string name="search_placeholder">What would you like to eat?</string>
+    <string name="Profile">Profile</string>
+    <string name="kembali">kembali</string>
+    <string name="save">Save Changes</string>
+    <string name="terms">Terms and Condition</string>
+    <string name="termscondition">This statement is often used to explain the use of Lorem Ipsum in graphic design and web development. Lorem Ipsum is a placeholder text that is used to fill in the space where real content will eventually go. It is made up of random Latin words that are arranged in a way that looks like real English text. The purpose of using Lorem Ipsum is to avoid distracting the reader from the layout of the page. If real content were used, the readers eye would be drawn to the words and they would start to read the text. This would make it difficult for them to see the overall design of the page. Lorem Ipsum does not have any real meaning, so it does not distract the reader from the layout of the page. It also has a more-or-less normal distribution of letters, which makes it look like real English text. This makes it a good choice for filling in space on a page.</string>
+    <string name="conditions">Conditions of Uses</string>
+    <string name="password">Password</string>
+    <string name="detailorder">Detail Order</string>
+    <string name="food">Fride Noodle</string>
+    <string name="harga">Rp 27.000</string>
+    <string name="notification">Notification</string>
+    <string name="checkout">Checkout</string>
+</resources>
