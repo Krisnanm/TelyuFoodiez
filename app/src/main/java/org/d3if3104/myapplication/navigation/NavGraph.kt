@@ -22,14 +22,19 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.ui.screen.auth.LoginScreen
 import org.d3if3104.myapplication.ui.screen.auth.Register
-import org.d3if3104.myapplication.ui.screen.checkout.CheckoutScreen
+import org.d3if3104.myapplication.ui.screen.authPenjual.LoginPenjual
+import org.d3if3104.myapplication.ui.screen.authPenjual.RegisterPenjual
+import org.d3if3104.myapplication.ui.screen.pembeli.checkout.CheckoutScreen
 import org.d3if3104.myapplication.ui.screen.dashboard.DashboardScreen
-import org.d3if3104.myapplication.ui.screen.detail.DetailOrderScreen
-import org.d3if3104.myapplication.ui.screen.detail.DetailTenant
+import org.d3if3104.myapplication.ui.screen.pembeli.detail.DetailOrderScreen
+import org.d3if3104.myapplication.ui.screen.pembeli.detail.DetailTenant
 import org.d3if3104.myapplication.ui.screen.notification.NotificationScreen
+import org.d3if3104.myapplication.ui.screen.penjual.ConditionPenjual
+import org.d3if3104.myapplication.ui.screen.penjual.TermsPenjual
 import org.d3if3104.myapplication.ui.screen.process.OrderProcess
-import org.d3if3104.myapplication.ui.screen.profile.ProfileScreen
-import org.d3if3104.myapplication.ui.screen.profile.TermsConditionScreen
+import org.d3if3104.myapplication.ui.screen.pembeli.profile.ProfileScreen
+import org.d3if3104.myapplication.ui.screen.pembeli.profile.TermsConditionScreen
+import org.d3if3104.myapplication.ui.screen.role.RoleScreen
 
 
 @Composable
@@ -71,7 +76,7 @@ fun SetupNavGraph() {
     ) { paddingValues ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Login.route,
+            startDestination = Screen.Role.route,
             modifier = Modifier.padding(paddingValues)
         ){
             composable(route = Screen.Login.route) {
@@ -103,6 +108,21 @@ fun SetupNavGraph() {
             }
             composable(route = Screen.Cart.route) {
                 CheckoutScreen(navController)
+            }
+            composable(route = Screen.LoginPenjual.route) {
+                LoginPenjual(navController)
+            }
+            composable(route = Screen.RegisterPenjual.route) {
+                RegisterPenjual(navController)
+            }
+            composable(route = Screen.TermsPenjual.route) {
+                TermsPenjual(navController)
+            }
+            composable(route = Screen.ConditionPenjual.route) {
+                ConditionPenjual(navController)
+            }
+            composable(route = Screen.Role.route) {
+                RoleScreen(navController)
             }
         }
         LaunchedEffect(navController.currentDestination) {

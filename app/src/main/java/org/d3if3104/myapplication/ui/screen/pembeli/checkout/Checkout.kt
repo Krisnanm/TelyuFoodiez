@@ -1,7 +1,6 @@
-package org.d3if3104.myapplication.ui.screen.checkout
+package org.d3if3104.myapplication.ui.screen.pembeli.checkout
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Delete
@@ -46,7 +44,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
 import org.d3if3104.myapplication.navigation.Screen
-import org.d3if3104.myapplication.ui.screen.detail.ScreenContent
 import org.d3if3104.myapplication.ui.theme.GreenButton
 import org.d3if3104.myapplication.ui.theme.LightGreen
 
@@ -112,7 +109,7 @@ fun CheckoutScreen(navController: NavHostController) {
             }
         },
     ){
-        org.d3if3104.myapplication.ui.screen.checkout.ScreenContent(navController , modifier = Modifier.padding(it))
+        ScreenContent(navController , modifier = Modifier.padding(it))
     }
 }
 

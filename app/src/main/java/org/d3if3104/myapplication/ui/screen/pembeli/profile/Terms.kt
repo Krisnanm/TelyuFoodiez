@@ -1,4 +1,4 @@
-package org.d3if3104.myapplication.ui.screen.profile
+package org.d3if3104.myapplication.ui.screen.pembeli.profile
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer

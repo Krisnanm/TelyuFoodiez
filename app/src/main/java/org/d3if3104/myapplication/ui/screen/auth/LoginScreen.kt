@@ -22,8 +22,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults.colors
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,12 +40,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
 import org.d3if3104.myapplication.navigation.Screen
-import org.d3if3104.myapplication.ui.theme.GrayTextField
 import org.d3if3104.myapplication.ui.theme.GreenButton
 
 @Composable
@@ -71,7 +67,7 @@ private fun ScreenContent(navController: NavHostController,modifier: Modifier) {
     ) {
             Image(
                 modifier = Modifier.size(220.dp, 100.dp),
-                painter = painterResource(id = R.drawable.app_logo),
+                painter = painterResource(id = R.drawable.logo_app),
                 contentDescription = stringResource(R.string.app_logo)
             )
         Column {
