@@ -78,13 +78,9 @@ fun SetupNavGraph() {
             startDestination = Screen.Role.route,
             modifier = Modifier.padding(paddingValues)
         ){
-            composable(route = Screen.Login.route,
-                arguments = listOf(
-                    navArgument("role") {type = NavType.StringType}
-                )
+            composable(route = Screen.Login.route
             ) { backStackEntry ->
-                val role = backStackEntry.arguments?.getString("role")
-                LoginScreen(role, navController)
+                LoginScreen(navController)
             }
             composable(route = Screen.Register.route,
                 arguments = listOf(

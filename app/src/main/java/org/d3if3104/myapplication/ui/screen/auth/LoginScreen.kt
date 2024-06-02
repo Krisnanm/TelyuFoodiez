@@ -54,17 +54,17 @@ import org.d3if3104.myapplication.ui.theme.GreenButton
 import org.d3if3104.myapplication.viewmodel.UserViewModel
 
 @Composable
-fun LoginScreen(role: String?, navController: NavHostController) {
+fun LoginScreen(navController: NavHostController) {
     val userViewModel: UserViewModel = viewModel()
 
     Scaffold(containerColor = Color.White) {
-        ScreenContent(userViewModel, role,navController,modifier = Modifier.padding(it))
+        ScreenContent(userViewModel,navController,modifier = Modifier.padding(it))
     }
 }
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-private fun ScreenContent(userViewModel: UserViewModel, role: String?,navController: NavHostController,modifier: Modifier) {
+private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostController,modifier: Modifier) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -74,11 +74,12 @@ private fun ScreenContent(userViewModel: UserViewModel, role: String?,navControl
 
     val loginSuccess by userViewModel.isLoginSuccessful.collectAsState()
     val loginError by userViewModel.loginErrorMessage.collectAsState()
+    val userType by userViewModel.userType.collectAsState()
 
     LaunchedEffect(loginSuccess) {
         if (loginSuccess) {
             Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show()
-            when (role) {
+            when (userType) {
                 "penjual" -> navController.navigate(Screen.TermsPenjual.route)
                 "pembeli" -> navController.navigate(Screen.Dashboard.route)
                 else -> Toast.makeText(context, "Pengguna tidak ditemukan", Toast.LENGTH_SHORT).show()
@@ -176,5 +177,5 @@ private fun ScreenContent(userViewModel: UserViewModel, role: String?,navControl
 @Preview
 @Composable
 fun LoginScreenPrev() {
-    LoginScreen("penjual", rememberNavController())
+    LoginScreen(rememberNavController())
 }

@@ -1,5 +1,6 @@
 package org.d3if3104.myapplication.ui.screen.penjual
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,30 +24,46 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
 import org.d3if3104.myapplication.navigation.Screen
 import org.d3if3104.myapplication.ui.theme.GreenButton
+import org.d3if3104.myapplication.viewmodel.UserViewModel
 
 @Composable
 fun ConditionPenjual(navController: NavHostController) {
+    val userViewModel: UserViewModel = viewModel()
     Scaffold(containerColor = Color.White, bottomBar = {}) {
-        ScreenContent(navController, modifier = Modifier.padding(it))
+        ScreenContent(userViewModel,navController, modifier = Modifier.padding(it))
     }
 }
 
 @Composable
-private fun ScreenContent(navController: NavHostController, modifier: Modifier) {
+private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostController, modifier: Modifier) {
+
+    val context = LocalContext.current
+
+    LaunchedEffect(userViewModel.logoutSuccess) {}
+    val logoutSuccess =userViewModel.logoutSuccess.collectAsState().value
+    if (logoutSuccess) {
+        Toast.makeText(context, "Berhasil Keluar", Toast.LENGTH_SHORT).show()
+        userViewModel.resetLogoutState()
+    }
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -96,7 +113,7 @@ private fun ScreenContent(navController: NavHostController, modifier: Modifier) 
                     )
                 }
                 Spacer(modifier = Modifier.height(32.dp)) // Increase the space between the card and the button
-                LanjutButton(navController)
+                LanjutButton(userViewModel, navController)
             }
         }
     }
@@ -190,19 +207,19 @@ fun MenuItem(imageRes: Int, textRes: Int) {
 }
 
 @Composable
-fun LanjutButton(navController: NavHostController) {
+fun LanjutButton(userViewModel: UserViewModel,navController: NavHostController) {
     Button(
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        onClick = { navController.navigate(Screen.Dashboard.route) },
+        onClick = { userViewModel.logout(navController) },
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
             GreenButton, Color.White
         )
     ) {
         Text(
-            text = stringResource(R.string.lanjut_button),
+            text = stringResource(R.string.logout),
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
