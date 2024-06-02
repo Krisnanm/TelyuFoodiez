@@ -61,7 +61,6 @@ class UserViewModel : ViewModel() {
                             "ERROR_TOO_MANY_REQUESTS" -> "Terlalu banyak percobaan. Coba lagi nanti."
                             else -> "Kesalahan autentikasi."
                         }
-
                         else -> exception?.message ?: "Kesalahan tidak diketahui."
                     }
                     _loginErrorMessage.value = errorMessage

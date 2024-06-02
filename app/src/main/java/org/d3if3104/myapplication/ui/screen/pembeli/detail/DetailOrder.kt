@@ -1,5 +1,6 @@
 package org.d3if3104.myapplication.ui.screen.pembeli.detail
 
+import android.content.ContentValues.TAG
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -29,21 +30,30 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.media3.common.util.Log
+import androidx.media3.common.util.UnstableApi
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
+import org.d3if3104.myapplication.firebase.addToCart
+import org.d3if3104.myapplication.firebase.addToCart
+import org.d3if3104.myapplication.model.CartItem
 import org.d3if3104.myapplication.navigation.Screen
 import org.d3if3104.myapplication.ui.theme.GreenButton
 import org.d3if3104.myapplication.ui.theme.LightGreen
 
+@androidx.annotation.OptIn(UnstableApi::class)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun DetailOrderScreen(navController: NavHostController) {
+    val foodName = stringResource(id = R.string.food) // Ambil nilai stringResource di dalam komposisi
+    val foodPrice = 27000 // Sesuaikan harga makanan
+
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = {navController.navigate(Screen.Dashboard.route)}) {
+                    IconButton(onClick = { navController.navigate(Screen.Dashboard.route) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                             contentDescription = stringResource(id = R.string.kembali),
@@ -51,7 +61,7 @@ fun DetailOrderScreen(navController: NavHostController) {
                         )
                     }
                 },
-                title ={
+                title = {
                     Text(text = stringResource(id = R.string.detailorder))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -61,8 +71,7 @@ fun DetailOrderScreen(navController: NavHostController) {
             )
         },
         bottomBar = {
-            BottomAppBar(
-            ){
+            BottomAppBar {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -77,7 +86,7 @@ fun DetailOrderScreen(navController: NavHostController) {
                             color = Color.Gray
                         )
                         Text(
-                            text = "Rp 27.000",
+                            text = "Rp $foodPrice",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
@@ -86,7 +95,19 @@ fun DetailOrderScreen(navController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .width(200.dp),
-                        onClick = {navController.navigate(Screen.OrderProcess.route)},
+                        onClick = {
+                            val item = CartItem(
+                                name = foodName,
+                                price = foodPrice,
+                                quantity = 1
+                            )
+                            addToCart(item, onSuccess = {
+                                navController.navigate(Screen.Cart.route)
+                            }, onFailure = { e ->
+                                Log.e(TAG, "Failed to add item to cart", e)
+                                // Tambahkan penanganan kesalahan yang sesuai di sini
+                            })
+                        },
                         shape = RoundedCornerShape(40),
                         colors = ButtonDefaults.buttonColors(
                             GreenButton, contentColor = Color.White
@@ -97,13 +118,13 @@ fun DetailOrderScreen(navController: NavHostController) {
                 }
             }
         },
-    ){
+    ) {
         ScreenContent(navController, modifier = Modifier.padding(it))
     }
 }
 
 @Composable
-fun ScreenContent (navController: NavHostController, modifier: Modifier) {
+fun ScreenContent(navController: NavHostController, modifier: Modifier) {
     Column(
         modifier = modifier
             .fillMaxSize()
@@ -124,7 +145,7 @@ fun ScreenContent (navController: NavHostController, modifier: Modifier) {
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp),
-                text = stringResource(id = R.string.harga),
+                text = "Rp 27.000", // Tampilkan harga secara langsung
                 fontSize = 20.sp
             )
         }

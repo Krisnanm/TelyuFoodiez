@@ -26,6 +26,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,7 +43,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import org.d3if3104.myapplication.R
+import org.d3if3104.myapplication.model.CartItem
 import org.d3if3104.myapplication.navigation.Screen
 import org.d3if3104.myapplication.ui.theme.GreenButton
 import org.d3if3104.myapplication.ui.theme.LightGreen
@@ -50,11 +54,19 @@ import org.d3if3104.myapplication.ui.theme.LightGreen
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CheckoutScreen(navController: NavHostController) {
+    var cartItems by remember { mutableStateOf(listOf<CartItem>()) }
+
+    LaunchedEffect(Unit) {
+        getCartItems { items ->
+            cartItems = items
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
                 navigationIcon = {
-                    IconButton(onClick = {navController.navigate(Screen.Dashboard.route)}) {
+                    IconButton(onClick = { navController.navigate(Screen.Dashboard.route) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.baseline_arrow_back_ios_24),
                             contentDescription = stringResource(id = R.string.kembali),
@@ -62,7 +74,7 @@ fun CheckoutScreen(navController: NavHostController) {
                         )
                     }
                 },
-                title ={
+                title = {
                     Text(text = stringResource(id = R.string.checkout))
                 },
                 colors = TopAppBarDefaults.mediumTopAppBarColors(
@@ -72,8 +84,7 @@ fun CheckoutScreen(navController: NavHostController) {
             )
         },
         bottomBar = {
-            BottomAppBar(
-            ){
+            BottomAppBar {
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -88,7 +99,7 @@ fun CheckoutScreen(navController: NavHostController) {
                             color = Color.Gray
                         )
                         Text(
-                            text = "Rp 27.000",
+                            text = "Rp ${cartItems.sumOf { it.price * it.quantity }}",
                             fontSize = 20.sp,
                             fontWeight = FontWeight.Bold,
                             color = Color.Black
@@ -97,7 +108,7 @@ fun CheckoutScreen(navController: NavHostController) {
                     Button(
                         modifier = Modifier
                             .width(200.dp),
-                        onClick = {navController.navigate(Screen.OrderProcess.route)},
+                        onClick = { navController.navigate(Screen.OrderProcess.route) },
                         shape = RoundedCornerShape(40),
                         colors = ButtonDefaults.buttonColors(
                             GreenButton, contentColor = Color.White
@@ -108,16 +119,36 @@ fun CheckoutScreen(navController: NavHostController) {
                 }
             }
         },
-    ){
-        ScreenContent(navController , modifier = Modifier.padding(it))
+    ) {
+        ScreenContent(navController, modifier = Modifier.padding(it), cartItems)
     }
 }
 
+fun getCartItems(onCartItemsReceived: (List<CartItem>) -> Unit) {
+    val user = FirebaseAuth.getInstance().currentUser
+    if (user != null) {
+        val db = FirebaseFirestore.getInstance()
+        db.collection("carts").document(user.uid)
+            .collection("items")
+            .addSnapshotListener { snapshots, e ->
+                if (e != null) {
+                    // Error fetching cart items
+                    e.printStackTrace()
+                    return@addSnapshotListener
+                }
+                if (snapshots != null) {
+                    val cartItems = snapshots.toObjects(CartItem::class.java)
+                    onCartItemsReceived(cartItems)
+                }
+            }
+    }
+}
+
+
 @Composable
-private fun ScreenContent(navController: NavHostController, modifier: Modifier) {
+private fun ScreenContent(navController: NavHostController, modifier: Modifier, cartItems: List<CartItem>) {
     var deliveryLocation by remember { mutableStateOf(TextFieldValue("Gedung Asrama 5, No Kamar 20")) }
-    var quantity by remember { mutableStateOf(1) }
-    val price = 28000
+
     Column(
         modifier = modifier.padding(16.dp)
     ) {
@@ -142,23 +173,24 @@ private fun ScreenContent(navController: NavHostController, modifier: Modifier) 
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
-        ItemRow(price, quantity, onQuantityChange = { quantity = it })
+        ItemRow(cartItems)
         Spacer(modifier = Modifier.height(16.dp))
-        PaymentSummary(price, quantity)
+        PaymentSummary(cartItems)
     }
 }
 
 @Composable
-fun ItemRow(price: Int, quantity: Int, onQuantityChange: (Int) -> Unit) {
+fun ItemRow(cartItems: List<CartItem>) {
     Column {
-        Item(price, quantity, onQuantityChange)
-        Spacer(modifier = Modifier.height(8.dp))
-        Item(price, quantity, onQuantityChange)
+        cartItems.forEach { item ->
+            Item(item)
+            Spacer(modifier = Modifier.height(8.dp))
+        }
     }
 }
 
 @Composable
-fun Item(price: Int, quantity: Int, onQuantityChange: (Int) -> Unit) {
+fun Item(item: CartItem) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -170,17 +202,17 @@ fun Item(price: Int, quantity: Int, onQuantityChange: (Int) -> Unit) {
         )
         Spacer(modifier = Modifier.width(16.dp))
         Column {
-            Text("Fried Noodle")
+            Text(item.name)
             Spacer(modifier = Modifier.height(4.dp))
-            Text("Rp $price")
+            Text("Rp ${item.price}")
         }
         Spacer(modifier = Modifier.weight(1f))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { if (quantity > 0) onQuantityChange(quantity - 1) }) {
+            IconButton(onClick = { /* Update quantity */ }) {
                 Icon(Icons.Default.Delete, contentDescription = null)
             }
-            Text(quantity.toString())
-            IconButton(onClick = { onQuantityChange(quantity + 1) }) {
+            Text(item.quantity.toString())
+            IconButton(onClick = { /* Update quantity */ }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         }
@@ -188,8 +220,8 @@ fun Item(price: Int, quantity: Int, onQuantityChange: (Int) -> Unit) {
 }
 
 @Composable
-fun PaymentSummary(price: Int, quantity: Int) {
-    val totalPrice = price * quantity
+fun PaymentSummary(cartItems: List<CartItem>) {
+    val totalPrice = cartItems.sumOf { it.price * it.quantity }
     Column {
         Text(
             text = "Payment",
@@ -202,7 +234,7 @@ fun PaymentSummary(price: Int, quantity: Int) {
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text("Price")
-            Text("Rp $price")
+            Text("Rp $totalPrice")
         }
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -221,8 +253,9 @@ fun PaymentSummary(price: Int, quantity: Int) {
     }
 }
 
+
 @Preview
 @Composable
-fun CheckoutScreenPrev () {
+fun CheckoutScreenPrev() {
     CheckoutScreen(rememberNavController())
 }
