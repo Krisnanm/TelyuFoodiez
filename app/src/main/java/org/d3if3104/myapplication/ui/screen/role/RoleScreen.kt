@@ -86,7 +86,7 @@ private fun ScreenContent(navController: NavHostController,modifier: Modifier) {
                     navController = navController,
                     R.string.penjual,
                     R.string.desc_individual,
-                    onClick = { navController.navigate(Screen.RegisterPenjual.route)}
+                    onClick = { navController.navigate(Screen.Register.withRole("penjual"))}
                 )
             }
             item {
@@ -94,7 +94,7 @@ private fun ScreenContent(navController: NavHostController,modifier: Modifier) {
                     navController = navController,
                     R.string.pembeli,
                     R.string.desc_franchise,
-                    onClick = { navController.navigate(Screen.Register.route)}
+                    onClick = { navController.navigate(Screen.Register.withRole("pembeli"))}
                 )
             }
         }

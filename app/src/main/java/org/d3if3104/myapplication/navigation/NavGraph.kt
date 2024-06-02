@@ -5,7 +5,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -16,14 +15,14 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import org.d3if3104.myapplication.ui.screen.auth.LoginScreen
 import org.d3if3104.myapplication.ui.screen.auth.Register
-import org.d3if3104.myapplication.ui.screen.authPenjual.LoginPenjual
-import org.d3if3104.myapplication.ui.screen.authPenjual.RegisterPenjual
 import org.d3if3104.myapplication.ui.screen.pembeli.checkout.CheckoutScreen
 import org.d3if3104.myapplication.ui.screen.dashboard.DashboardScreen
 import org.d3if3104.myapplication.ui.screen.pembeli.detail.DetailOrderScreen
@@ -79,11 +78,21 @@ fun SetupNavGraph() {
             startDestination = Screen.Role.route,
             modifier = Modifier.padding(paddingValues)
         ){
-            composable(route = Screen.Login.route) {
-                LoginScreen(navController)
+            composable(route = Screen.Login.route,
+                arguments = listOf(
+                    navArgument("role") {type = NavType.StringType}
+                )
+            ) { backStackEntry ->
+                val role = backStackEntry.arguments?.getString("role")
+                LoginScreen(role, navController)
             }
-            composable(route = Screen.Register.route) {
-                Register(navController)
+            composable(route = Screen.Register.route,
+                arguments = listOf(
+                    navArgument("role") {type = NavType.StringType}
+                )
+            ) { backStackEntry ->
+                val role = backStackEntry.arguments?.getString("role")
+                Register(role, navController)
             }
             composable(route = Screen.Dashboard.route) {
                 DashboardScreen(navController)
@@ -108,12 +117,6 @@ fun SetupNavGraph() {
             }
             composable(route = Screen.Cart.route) {
                 CheckoutScreen(navController)
-            }
-            composable(route = Screen.LoginPenjual.route) {
-                LoginPenjual(navController)
-            }
-            composable(route = Screen.RegisterPenjual.route) {
-                RegisterPenjual(navController)
             }
             composable(route = Screen.TermsPenjual.route) {
                 TermsPenjual(navController)

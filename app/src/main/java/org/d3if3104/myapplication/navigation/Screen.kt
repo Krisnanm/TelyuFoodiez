@@ -1,8 +1,11 @@
 package org.d3if3104.myapplication.navigation
 
+
 sealed class Screen (val route: String) {
-    data object Login: Screen("login")
-    data object Register: Screen("register")
+    data object Login : Screen("login")
+    data object Register : Screen("register/{role}"){
+        fun withRole(role: String) = "register/$role"
+    }
     data object Dashboard: Screen("dashboard")
     data object Cart: Screen("cart")
     data object Profile: Screen("profile")
@@ -15,6 +18,4 @@ sealed class Screen (val route: String) {
     data object Role: Screen("role")
     data object TermsPenjual: Screen("termspenjual")
     data object ConditionPenjual: Screen("Condition")
-    data object LoginPenjual: Screen("loginpenjual")
-    data object RegisterPenjual: Screen("registerpenjual")
 }

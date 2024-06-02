@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">TelyuFoodiez</string>
     <string name="app_logo">App logo</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
     <string name="phone_logo">phone logo</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
