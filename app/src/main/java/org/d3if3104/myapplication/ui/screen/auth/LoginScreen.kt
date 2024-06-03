@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -58,13 +59,17 @@ fun LoginScreen(navController: NavHostController) {
     val userViewModel: UserViewModel = viewModel()
 
     Scaffold(containerColor = Color.White) {
-        ScreenContent(userViewModel,navController,modifier = Modifier.padding(it))
+        ScreenContent(userViewModel, navController, modifier = Modifier.padding(it))
     }
 }
 
 @SuppressLint("SuspiciousIndentation")
 @Composable
-private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostController,modifier: Modifier) {
+private fun ScreenContent(
+    userViewModel: UserViewModel,
+    navController: NavHostController,
+    modifier: Modifier
+) {
     val context = LocalContext.current
     var email by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -74,15 +79,18 @@ private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostCon
 
     val loginSuccess by userViewModel.isLoginSuccessful.collectAsState()
     val loginError by userViewModel.loginErrorMessage.collectAsState()
-    val userType by userViewModel.userType.collectAsState()
+    val role by userViewModel.role.collectAsState()
 
     LaunchedEffect(loginSuccess) {
-        if (loginSuccess) {
-            Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show()
-            when (userType) {
-                "penjual" -> navController.navigate(Screen.TermsPenjual.route)
-                "pembeli" -> navController.navigate(Screen.Dashboard.route)
-                else -> Toast.makeText(context, "Pengguna tidak ditemukan", Toast.LENGTH_SHORT).show()
+        if (role.isNotEmpty()) {
+            if (loginSuccess) {
+                Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show()
+                when (role) {
+                    "penjual" -> navController.navigate(Screen.TermsPenjual.route)
+                    "pembeli" -> navController.navigate(Screen.Dashboard.route)
+                    else -> Toast.makeText(context, "Pengguna tidak ditemukan", Toast.LENGTH_SHORT)
+                        .show()
+                }
             }
         }
     }
@@ -101,11 +109,11 @@ private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostCon
         verticalArrangement = Arrangement.SpaceEvenly,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-            Image(
-                modifier = Modifier.size(220.dp, 100.dp),
-                painter = painterResource(id = R.drawable.logo_app),
-                contentDescription = stringResource(R.string.app_logo)
-            )
+        Image(
+            modifier = Modifier.size(220.dp, 100.dp),
+            painter = painterResource(id = R.drawable.logo_app),
+            contentDescription = stringResource(R.string.app_logo)
+        )
         Column {
             Text(text = stringResource(R.string.email))
             OutlinedTextField(
@@ -115,7 +123,8 @@ private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostCon
                 keyboardOptions = KeyboardOptions.Default.copy(imeAction = ImeAction.Next),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .background(Color.White),leadingIcon = {
+                    .background(Color.White),
+                leadingIcon = {
                     Icon(
                         painter = painterResource(id = R.drawable.baseline_email_24),
                         contentDescription = "Address Icon",
@@ -152,7 +161,7 @@ private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostCon
                     if (emailError || passwordError) {
                         return@Button
                     } else
-                    userViewModel.loginUser(email, password)
+                        userViewModel.loginUser(email, password)
                 },
                 shape = RoundedCornerShape(16.dp),
                 colors = buttonColors(
@@ -167,9 +176,20 @@ private fun ScreenContent(userViewModel: UserViewModel,navController: NavHostCon
             }
         }
         Row {
-        Text(text = stringResource(R.string.no_account), fontSize = 14.sp)
-            ClickableText(text = AnnotatedString(stringResource(R.string.sign_up_button)), onClick = {navController.navigate(
-                Screen.Register.route)}, style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = GreenButton))
+            Text(text = stringResource(R.string.no_account), fontSize = 14.sp)
+            ClickableText(
+                text = AnnotatedString(stringResource(R.string.sign_up_button)),
+                onClick = {
+                    navController.navigate(
+                        Screen.Register.route
+                    )
+                },
+                style = TextStyle(
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = GreenButton
+                )
+            )
         }
     }
 }

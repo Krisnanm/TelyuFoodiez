@@ -11,6 +11,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.tasks.await
 import org.d3if3104.myapplication.firebase.UserRepository
 import org.d3if3104.myapplication.model.User
 import org.d3if3104.myapplication.navigation.Screen
@@ -75,8 +76,8 @@ class UserViewModel : ViewModel() {
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
 
-    private val _userType = MutableStateFlow<String>("")
-    val userType: StateFlow<String> = _userType
+    private val _role = MutableStateFlow<String>("")
+    val role: StateFlow<String> = _role
 
     private val _updateSuccess = MutableStateFlow(false)
     val updateSuccess: StateFlow<Boolean> get() = _updateSuccess
@@ -105,12 +106,43 @@ class UserViewModel : ViewModel() {
             try {
                 val user = userRepository.getUserById(userId)
                 _currentUser.value = user
-                _userType.value = user!!.role
+                _role.value = user!!.role
             } catch (e: Exception) {
                 _updateError.value = e.message
                 Log.d("UserViewModel", "Error fetching user data: ${e.message}")
             }
         }
+    }
+
+    fun update(name: String, email: String, address: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val userId = _currentUser.value?.uid ?: return
+        val userDocRef = userRepository.firestore.collection("users").document(userId)
+
+        viewModelScope.launch {
+            try {
+                val updates = hashMapOf<String, Any>(
+                    "name" to name,
+                    "email" to email,
+                    "address" to address
+                )
+                userDocRef.update(updates).await()
+                fetchUserData(userId) // Refresh current user data
+                _updateSuccess.value = true
+                _updateError.value = null
+                Log.d("UserViewModel", "Berhasil Diubah.")
+                onSuccess()
+            } catch (e: Exception) {
+                _updateError.value = e.message
+                _updateSuccess.value = false
+                Log.d("UserViewModel", "Gagal Mengubah: ${e.message}")
+                onFailure(e)
+            }
+        }
+    }
+
+    fun resetUpdateState() {
+        _updateSuccess.value = false
+        _updateError.value = null
     }
 
     private fun saveUserToFirestore(user: User) {

@@ -27,6 +27,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -74,6 +75,7 @@ private fun ScreenContent(userViewModel: UserViewModel,role: String?,navControll
     var emailError by remember { mutableStateOf(false) }
     var addressError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
+
 
     val registrationSuccess by userViewModel.isRegistrationSuccessful.collectAsState()
     val registrationError by userViewModel.registrationErrorMessage.collectAsState()

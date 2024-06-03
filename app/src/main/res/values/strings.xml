@@ -50,5 +50,7 @@
     <string name="privasi_desc">Para penjual yang terikat dengan FoodFusion diwajibkan melampirkan informasi yang akurat dan lengkap mengenai kantin apa yang mereka sedang per jual belikan. pada app yang akan digunakan nanti nya dan mematuhi segalanya. Menyetujui segala bentuk kebijakan yang dibuat oleh pihak TelyuFoodies yang telah dilinungi oleh hukum indonesia. Pihak penjual diwajibkan melakukan pendaftaran sesuai dengan peraturan dan ketentuan yang ada tanpa melewati salah satu diantaranya dan harus lengkap data penjual.</string>
     <string name="pendaftaran_persetujuan">PENDAFTARAN DAN PERSETUJUAN</string>
     <string name="logout">Logout</string>
+    <string name="bttn_edit">Edit</string>
+    <string name="bttn_save">Save</string>
 
 </resources>

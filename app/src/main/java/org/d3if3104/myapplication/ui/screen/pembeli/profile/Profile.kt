@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -40,7 +40,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -88,6 +88,56 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
 
     val context = LocalContext.current
 
+    val currentUser by userViewModel.currentUser.collectAsState()
+
+    var name by remember {
+        mutableStateOf("")
+    }
+    var email by remember {
+        mutableStateOf("")
+    }
+    var address by remember {
+        mutableStateOf("")
+    }
+
+    var readOnly by remember { mutableStateOf(true) }
+
+    val updateSuccess by userViewModel.updateSuccess.collectAsState()
+
+    val updateError by userViewModel.updateError.collectAsState()
+
+    LaunchedEffect(Unit) {
+        val userId = userViewModel.currentUser.value?.uid
+        if (userId != null) {
+            userViewModel.fetchUserData(userId)
+        }
+    }
+
+    LaunchedEffect(currentUser) {
+        currentUser?.let {
+            name = it.name
+            email = it.email
+            address = it.address
+        }
+    }
+
+    LaunchedEffect(updateSuccess) {
+        if (updateSuccess) {
+            Toast.makeText(context, "Berhasil Tersimpan", Toast.LENGTH_SHORT).show()
+            navController.navigate(Screen.Profile.route) {
+                popUpTo(Screen.Profile.route) { inclusive = true }
+            }
+            userViewModel.resetUpdateState()
+        }
+    }
+
+    LaunchedEffect(updateError) {
+        updateError?.let {
+            Toast.makeText(context, "Gagal Menyimpan: $it", Toast.LENGTH_SHORT).show()
+            userViewModel.resetUpdateState()
+        }
+    }
+
     LaunchedEffect(userViewModel.logoutSuccess) {}
     val logoutSuccess =userViewModel.logoutSuccess.collectAsState().value
     if (logoutSuccess) {
@@ -114,12 +164,12 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
                     .fillMaxSize()
                     .padding(16.dp)
             ) {
-                // Username section
                 Text(text = "Name", fontSize = 18.sp, color = Color.Black)
-                var name by remember { mutableStateOf(TextFieldValue()) }
                 OutlinedTextField(
                     value = name,
+                    singleLine = true,
                     onValueChange = { name = it },
+                    readOnly = readOnly,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -137,35 +187,38 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Email or Phone Number section
-                Text(text = "Phone Number", fontSize = 18.sp, color = Color.Black)
-                var phone by remember { mutableStateOf(TextFieldValue()) }
+                // Email
+                Text(text = "Email", fontSize = 18.sp, color = Color.Black)
                 OutlinedTextField(
-                    value = phone,
-                    onValueChange = { phone = it },
+                    value = email,
+                    singleLine = true,
+                    onValueChange = { email = it },
+                    readOnly = readOnly,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(Color.White),
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.baseline_phone_24), // Replace with your email icon resource
-                            contentDescription = "Phone Icon",
+                            painter = painterResource(id = R.drawable.baseline_email_24), // Replace with your email icon resource
+                            contentDescription = "Email Icon",
                             modifier = Modifier
                                 .size(24.dp)
                         )
                     },
-                    label = { Text(text = "Enter your Phone Number") },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                    label = { Text(text = "Enter your Email") },
                 )
 
                 Spacer(modifier = Modifier.height(12.dp))
 
                 // Address section
                 Text(text = "Address", fontSize = 18.sp, color = Color.Black)
-                var address by remember { mutableStateOf(TextFieldValue()) }
                 OutlinedTextField(
                     value = address,
+                    singleLine = true,
                     onValueChange = { address = it },
+                    readOnly = readOnly,
                     shape = RoundedCornerShape(14.dp),
                     modifier = Modifier
                         .fillMaxWidth()
@@ -184,17 +237,27 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
                 Spacer(modifier = Modifier.height(25.dp))
 
                 Button(
+                    onClick = {
+                        if (readOnly) {
+                            readOnly = false
+                        } else {
+                            userViewModel.update(name, email, address, onSuccess = {
+                                readOnly = true
+                            }, onFailure = {
+                                Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                            })
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(56.dp),
-                    onClick = {},
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(
                         GreenButton, contentColor = Color.White
                     )
                 ) {
                     Text(
-                        text = stringResource(R.string.save),
+                        text = stringResource(if (readOnly) R.string.bttn_edit else R.string.bttn_save),
                         fontSize = 16.sp,
                         fontWeight = FontWeight.SemiBold
                     )
@@ -234,11 +297,6 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
             }
         }
     }
-}
-
-@Composable
-fun SaveButton() {
-
 }
 
 
