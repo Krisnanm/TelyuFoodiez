@@ -52,5 +52,6 @@
     <string name="logout">Logout</string>
     <string name="bttn_edit">Edit</string>
     <string name="bttn_save">Save</string>
+    <string name="pesanan">Pesanan</string>
 
 </resources>

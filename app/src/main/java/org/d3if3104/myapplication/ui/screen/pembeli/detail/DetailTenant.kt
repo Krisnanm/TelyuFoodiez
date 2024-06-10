@@ -116,12 +116,12 @@ fun MenuSection(navController: NavHostController) {
         modifier = Modifier.padding(16.dp)
     )
     {
-        items(10) {
+        item {
             MenuItem(
                 navController = navController,
                 imageRes = R.drawable.fried,
-                title = "Bottega's Fried Rice",
-                price = "Rp98.000"
+                title = "Fried Noodle",
+                price = "Rp27.000"
             )
         }
     }

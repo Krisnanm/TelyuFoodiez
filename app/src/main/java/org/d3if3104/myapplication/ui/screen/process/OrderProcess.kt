@@ -64,5 +64,5 @@ fun ScreenContent (navController: NavHostController, modifier: Modifier) {
 @Preview
 @Composable
 fun OrderProcessPrev() {
-   OrderProcess(rememberNavController())
+    OrderProcess(rememberNavController())
 }

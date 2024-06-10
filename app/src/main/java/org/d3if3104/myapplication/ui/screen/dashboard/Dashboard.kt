@@ -155,24 +155,6 @@ private fun ScreenContent(navController: NavHostController,modifier: Modifier) {
                     R.string.serve_time
                 )
             }
-            item {
-                MenuCard(
-                    navController = navController,
-                    R.drawable.food,
-                    R.string.shop_name,
-                    R.string.shop_time_open,
-                    R.string.serve_time
-                )
-            }
-            item {
-                MenuCard(
-                    navController = navController,
-                    R.drawable.food,
-                    R.string.shop_name,
-                    R.string.shop_time_open,
-                    R.string.serve_time
-                )
-            }
         }
     }
 }

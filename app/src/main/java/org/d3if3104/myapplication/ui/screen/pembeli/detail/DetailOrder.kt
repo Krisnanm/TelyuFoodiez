@@ -36,7 +36,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
 import org.d3if3104.myapplication.firebase.addToCart
-import org.d3if3104.myapplication.firebase.addToCart
 import org.d3if3104.myapplication.model.CartItem
 import org.d3if3104.myapplication.navigation.Screen
 import org.d3if3104.myapplication.ui.theme.GreenButton
@@ -145,7 +144,7 @@ fun ScreenContent(navController: NavHostController, modifier: Modifier) {
             Text(
                 modifier = Modifier
                     .padding(start = 10.dp),
-                text = "Rp 27.000", // Tampilkan harga secara langsung
+                text = "Rp 27.000",
                 fontSize = 20.sp
             )
         }

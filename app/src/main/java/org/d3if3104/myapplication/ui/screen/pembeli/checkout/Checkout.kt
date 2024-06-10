@@ -62,6 +62,22 @@ fun CheckoutScreen(navController: NavHostController) {
         }
     }
 
+    fun addItem(item: CartItem) {
+        cartItems = cartItems.map {
+            if (it.id == item.id) it.copy(quantity = it.quantity + 1) else it
+        }
+    }
+
+    fun removeItem(item: CartItem) {
+        cartItems = cartItems.mapNotNull {
+            when {
+                it.id == item.id && it.quantity > 1 -> it.copy(quantity = it.quantity - 1)
+                it.id == item.id -> null
+                else -> it
+            }
+        }
+    }
+
     Scaffold(
         topBar = {
             TopAppBar(
@@ -120,7 +136,13 @@ fun CheckoutScreen(navController: NavHostController) {
             }
         },
     ) {
-        ScreenContent(navController, modifier = Modifier.padding(it), cartItems)
+        ScreenContent(
+            navController,
+            modifier = Modifier.padding(it),
+            cartItems,
+            ::addItem,
+            ::removeItem
+        )
     }
 }
 
@@ -146,7 +168,13 @@ fun getCartItems(onCartItemsReceived: (List<CartItem>) -> Unit) {
 
 
 @Composable
-private fun ScreenContent(navController: NavHostController, modifier: Modifier, cartItems: List<CartItem>) {
+private fun ScreenContent(
+    navController: NavHostController,
+    modifier: Modifier,
+    cartItems: List<CartItem>,
+    addItem: (CartItem) -> Unit,
+    removeItem: (CartItem) -> Unit
+) {
     var deliveryLocation by remember { mutableStateOf(TextFieldValue("Gedung Asrama 5, No Kamar 20")) }
 
     Column(
@@ -173,24 +201,24 @@ private fun ScreenContent(navController: NavHostController, modifier: Modifier, 
             fontWeight = FontWeight.Bold
         )
         Spacer(modifier = Modifier.height(8.dp))
-        ItemRow(cartItems)
+        ItemRow(cartItems, addItem, removeItem)
         Spacer(modifier = Modifier.height(16.dp))
         PaymentSummary(cartItems)
     }
 }
 
 @Composable
-fun ItemRow(cartItems: List<CartItem>) {
+fun ItemRow(cartItems: List<CartItem>, addItem: (CartItem) -> Unit, removeItem: (CartItem) -> Unit) {
     Column {
         cartItems.forEach { item ->
-            Item(item)
+            Item(item, addItem, removeItem)
             Spacer(modifier = Modifier.height(8.dp))
         }
     }
 }
 
 @Composable
-fun Item(item: CartItem) {
+fun Item(item: CartItem, addItem: (CartItem) -> Unit, removeItem: (CartItem) -> Unit) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
@@ -208,16 +236,17 @@ fun Item(item: CartItem) {
         }
         Spacer(modifier = Modifier.weight(1f))
         Row(verticalAlignment = Alignment.CenterVertically) {
-            IconButton(onClick = { /* Update quantity */ }) {
+            IconButton(onClick = { removeItem(item) }) {
                 Icon(Icons.Default.Delete, contentDescription = null)
             }
             Text(item.quantity.toString())
-            IconButton(onClick = { /* Update quantity */ }) {
+            IconButton(onClick = { addItem(item) }) {
                 Icon(Icons.Default.Add, contentDescription = null)
             }
         }
     }
 }
+
 
 @Composable
 fun PaymentSummary(cartItems: List<CartItem>) {

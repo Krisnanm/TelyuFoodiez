@@ -33,6 +33,7 @@ import org.d3if3104.myapplication.ui.screen.penjual.TermsPenjual
 import org.d3if3104.myapplication.ui.screen.process.OrderProcess
 import org.d3if3104.myapplication.ui.screen.pembeli.profile.ProfileScreen
 import org.d3if3104.myapplication.ui.screen.pembeli.profile.TermsConditionScreen
+import org.d3if3104.myapplication.ui.screen.penjual.HomePenjual
 import org.d3if3104.myapplication.ui.screen.role.RoleScreen
 
 
@@ -122,6 +123,9 @@ fun SetupNavGraph() {
             }
             composable(route = Screen.Role.route) {
                 RoleScreen(navController)
+            }
+            composable(route = Screen.HomePenjual.route) {
+                HomePenjual(navController)
             }
         }
         LaunchedEffect(navController.currentDestination) {
