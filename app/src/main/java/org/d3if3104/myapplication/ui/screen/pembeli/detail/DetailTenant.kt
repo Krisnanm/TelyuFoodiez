@@ -1,34 +1,19 @@
-package org.d3if3104.myapplication.ui.screen.detail
+package org.d3if3104.myapplication.ui.screen.pembeli.detail
 
+import android.content.ContentValues.TAG
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults.cardColors
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -37,27 +22,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavController
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
+import org.d3if3104.myapplication.model.CartItem
+import org.d3if3104.myapplication.model.MenuItemData
 import org.d3if3104.myapplication.navigation.Screen
 import org.d3if3104.myapplication.ui.theme.GreenButton
-import org.d3if3104.myapplication.ui.theme.LightGreen
 import org.d3if3104.myapplication.ui.theme.Stroke
+import org.d3if3104.myapplication.viewmodel.CartViewModel
 
 @Composable
 fun DetailTenant(navController: NavHostController) {
     Scaffold(containerColor = Color.White) {
-        ScreennContent(navController,modifier = Modifier.padding(it))
+        ScreenContent(navController, modifier = Modifier.padding(it))
     }
 }
 
 @Composable
-fun ScreennContent (navController: NavHostController, modifier: Modifier) {
+fun ScreenContent(navController: NavHostController, modifier: Modifier) {
     Column(
-        modifier = modifier
-            .fillMaxSize()
+        modifier = modifier.fillMaxSize()
     ) {
         Image(
             modifier = Modifier
@@ -92,7 +78,6 @@ fun ScreennContent (navController: NavHostController, modifier: Modifier) {
         }
         MenuSection(navController)
     }
-
 }
 
 @Composable
@@ -118,29 +103,60 @@ fun InfoItem(title: String, subtitle: String) {
 
 @Composable
 fun MenuSection(navController: NavHostController) {
+    val menuItems = listOf(
+        MenuItemData(
+            R.drawable.fried,
+            "Bottega's Fried Rice",
+            "Rp98.000",
+            "https://firebasestorage.googleapis.com/v0/b/telyufoodiez.appspot.com/o/menu%202.jpg?alt=media&token=44653b5c-573c-4c65-a9fb-3a5558a7299d"
+        ),
+        MenuItemData(
+            R.drawable.sushi_platter,
+            "Sushi Platter",
+            "Rp150.000",
+            "https://firebasestorage.googleapis.com/v0/b/telyufoodiez.appspot.com/o/menu%201.jpg?alt=media&token=7fe96437-37c3-4777-964e-0af44b448da1"
+        ),
+        MenuItemData(
+            R.drawable.wagyu_grill,
+            "Wagyu Grill",
+            "Rp300.000",
+            "https://firebasestorage.googleapis.com/v0/b/telyufoodiez.appspot.com/o/menu%204.jpg?alt=media&token=f9d147cb-4bd6-47fb-94b2-de2cb894697d"
+        ),
+        MenuItemData(
+            R.drawable.chicken_grill,
+            "Chicken Grill",
+            "Rp300.000",
+            "https://firebasestorage.googleapis.com/v0/b/telyufoodiez.appspot.com/o/menu%203.jpg?alt=media&token=1a855588-3aaf-46cb-abe5-0b92f147f029"
+        ),
+        MenuItemData(
+            R.drawable.grilled_salmon,
+            "Grilled Salmon",
+            "Rp200.000",
+            "https://firebasestorage.googleapis.com/v0/b/telyufoodiez.appspot.com/o/menu%202.jpg?alt=media&token=44653b5c-573c-4c65-a9fb-3a5558a7299d"
+        )
+    )
+
     LazyColumn(
         modifier = Modifier.padding(16.dp)
-    )
-    {
-        items(10) {
-            MenuItem(
-                navController = navController,
-                imageRes = R.drawable.fried,
-                title = "Bottega's Fried Rice",
-                price = "Rp98.000"
-            )
+    ) {
+        items(menuItems) { menuItem ->
+            MenuItem(navController = navController, menuItem = menuItem)
         }
     }
 }
 
 @Composable
-fun MenuItem(navController: NavHostController,imageRes: Int, title: String, price: String) {
+fun MenuItem(navController: NavHostController, menuItem: MenuItemData) {
+    val viewModel: CartViewModel = viewModel()
     Card(
         shape = RoundedCornerShape(8.dp),
         modifier = Modifier
             .fillMaxWidth()
             .padding(vertical = 8.dp),
-        colors = cardColors(containerColor = Color.White),
+        colors = CardDefaults.cardColors(
+            containerColor = Color.White,
+            contentColor = Color.Black
+        ),
         border = BorderStroke(2.dp, color = Stroke)
     ) {
         Row(
@@ -148,8 +164,8 @@ fun MenuItem(navController: NavHostController,imageRes: Int, title: String, pric
             modifier = Modifier.padding(16.dp)
         ) {
             Image(
-                painter = painterResource(id = imageRes),
-                contentDescription = title,
+                painter = painterResource(id = menuItem.imageRes),
+                contentDescription = menuItem.title,
                 contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .size(80.dp)
@@ -160,7 +176,7 @@ fun MenuItem(navController: NavHostController,imageRes: Int, title: String, pric
                 modifier = Modifier.weight(1f)
             ) {
                 Text(
-                    text = title,
+                    text = menuItem.title,
                     style = TextStyle(
                         fontSize = 18.sp,
                         fontWeight = FontWeight.Bold
@@ -168,7 +184,7 @@ fun MenuItem(navController: NavHostController,imageRes: Int, title: String, pric
                 )
                 Spacer(modifier = Modifier.height(4.dp))
                 Text(
-                    text = price,
+                    text = menuItem.price,
                     style = TextStyle(
                         fontSize = 16.sp,
                         color = Color.Gray
@@ -176,9 +192,22 @@ fun MenuItem(navController: NavHostController,imageRes: Int, title: String, pric
                 )
             }
             Button(
-                onClick = {navController.navigate(Screen.DetailOrder.route)},
+                onClick = {
+                    val cartItem = CartItem(
+                        id = "", // Anda bisa menggunakan ID unik jika diperlukan
+                        name = menuItem.title,
+                        price = menuItem.price.replace("Rp", "").replace(".", "").toInt(),
+                        quantity = 1
+                    )
+                    viewModel.addItemToCart(cartItem, onSuccess = {
+                        navController.navigate(Screen.Cart.route)
+                    }, onFailure = { e ->
+                        Log.e(TAG, "Failed to add item to cart", e)
+                    })
+                },
                 colors = ButtonDefaults.buttonColors(
-                    GreenButton, contentColor = Color.White)
+                    containerColor = GreenButton, contentColor = Color.White
+                )
             ) {
                 Text(
                     text = "Add",
@@ -192,6 +221,6 @@ fun MenuItem(navController: NavHostController,imageRes: Int, title: String, pric
 
 @Preview
 @Composable
-fun DetailTenantPrev () {
+fun DetailTenantPrev() {
     DetailTenant(rememberNavController())
 }

@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import org.d3if3104.myapplication.R
-import org.d3if3104.myapplication.ui.screen.detail.ScreenContent
+import org.d3if3104.myapplication.ui.screen.pembeli.detail.ScreenContent
 
 @Composable
 fun OrderSuccessful (navController: NavHostController){

@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">FoodFusion</string>
+    <string name="app_name">TelyuFoodiez</string>
     <string name="app_logo">App logo</string>
-    <string name="phone_number">Phone Number</string>
+    <string name="email">Email</string>
     <string name="phone_logo">phone logo</string>
     <string name="login_button">Login</string>
     <string name="register_button">Register</string>
@@ -17,11 +17,16 @@
     <string name="serve_time">20 mins</string>
     <string name="greetings">Hello, Nama</string>
     <string name="address">Alamat</string>
+    <string name="penjual">PENJUAL</string>
+    <string name="desc_individual">Bergabung sebagai Penjual</string>
+    <string name="pembeli">PEMBELI</string>
+    <string name="desc_franchise">Bergabung sebagai Pembeli</string>
     <string name="complete_address">Gedung Asrama 5, No Kamar 20</string>
     <string name="dropdown_button">dropdown_button</string>
     <string name="search_icon">search_icon</string>
     <string name="search_placeholder">What would you like to eat?</string>
     <string name="Profile">Profile</string>
+    <string name="choosing">Pilih jenis pendaftaran :</string>
     <string name="kembali">kembali</string>
     <string name="save">Save Changes</string>
     <string name="terms">Terms and Condition</string>
@@ -33,4 +38,20 @@
     <string name="harga">Rp 27.000</string>
     <string name="notification">Notification</string>
     <string name="checkout">Checkout</string>
+    <string name="data_dibutuhkan">Data yang perlu dilengkapi saat proses aktivasi :</string>
+    <string name="data1">Foto Profil</string>
+    <string name="data2">Keterangan Kantin</string>
+    <string name="data3">Daftar Menu</string>
+    <string name="data4">Jam Operasional</string>
+    <string name="lanjut_button">Lanjut</string>
+
+    <string name="kebijakan_privasi">KEBIJAKAN DAN PRIVASI</string>
+    <string name="terms_desc">Para penjual yang terikat dengan FoodFusion diwajibkan melampirkan informasi yang akurat dan lengkap mengenai kantin apa yang mereka sedang per jual belikan. pada app yang akan digunakan nanti nya dan mematuhi segalanya. Menyetujui segala bentuk kebijakan yang dibuat oleh pihak TelyuFoodies yang telah dilinungi oleh hukum indonesia. Pihak penjual diwajibkan melakukan pendaftaran sesuai dengan peraturan dan ketentuan yang ada tanpa melewati salah satu diantaranya dan harus lengkap data penjual.</string>
+    <string name="privasi_desc">Para penjual yang terikat dengan FoodFusion diwajibkan melampirkan informasi yang akurat dan lengkap mengenai kantin apa yang mereka sedang per jual belikan. pada app yang akan digunakan nanti nya dan mematuhi segalanya. Menyetujui segala bentuk kebijakan yang dibuat oleh pihak TelyuFoodies yang telah dilinungi oleh hukum indonesia. Pihak penjual diwajibkan melakukan pendaftaran sesuai dengan peraturan dan ketentuan yang ada tanpa melewati salah satu diantaranya dan harus lengkap data penjual.</string>
+    <string name="pendaftaran_persetujuan">PENDAFTARAN DAN PERSETUJUAN</string>
+    <string name="logout">Logout</string>
+    <string name="bttn_edit">Edit</string>
+    <string name="bttn_save">Save</string>
+    <string name="pesanan">Pesanan</string>
+
 </resources>

@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "161004220828",
+    "firebase_url": "https://telyufoodiez-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "telyufoodiez",
+    "storage_bucket": "telyufoodiez.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:161004220828:android:4e258663695cc19d7f1859",
+        "android_client_info": {
+          "package_name": "org.d3if3104.myapplication"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAfflvr6uq0s376VheOGSsgZn9_WNvnfwI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
