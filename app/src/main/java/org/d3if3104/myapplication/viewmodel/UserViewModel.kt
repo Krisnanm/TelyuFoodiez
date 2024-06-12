@@ -60,7 +60,7 @@ class UserViewModel : ViewModel() {
                             "ERROR_WRONG_PASSWORD" -> "Password salah."
                             "ERROR_USER_DISABLED" -> "Akun dinonaktifkan."
                             "ERROR_TOO_MANY_REQUESTS" -> "Terlalu banyak percobaan. Coba lagi nanti."
-                            else -> "Kesalahan autentikasi."
+                            else -> "email or password doesn't match"
                         }
                         else -> exception?.message ?: "Kesalahan tidak diketahui."
                     }

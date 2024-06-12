@@ -20,6 +20,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -27,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -75,6 +75,8 @@ private fun ScreenContent(userViewModel: UserViewModel,role: String?,navControll
     var emailError by remember { mutableStateOf(false) }
     var addressError by remember { mutableStateOf(false) }
     var passwordError by remember { mutableStateOf(false) }
+    var nameLengthError by remember { mutableStateOf(false) }
+    var passwordLengthError by remember { mutableStateOf(false) }
 
 
     val registrationSuccess by userViewModel.isRegistrationSuccessful.collectAsState()
@@ -110,7 +112,10 @@ private fun ScreenContent(userViewModel: UserViewModel,role: String?,navControll
             Text(text = stringResource(R.string.name))
             OutlinedTextField(
                 value = name,
-                onValueChange = { name = it },
+                onValueChange = {
+                    name = it
+                    nameLengthError = name.length > 20
+                    },
                 shape = RoundedCornerShape(14.dp),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -124,7 +129,15 @@ private fun ScreenContent(userViewModel: UserViewModel,role: String?,navControll
                     )
                 },
                 label = { Text(text = "Enter your name") },
+                isError = nameLengthError
             )
+            if (nameLengthError) {
+                Text(
+                    text = "Name should not exceed 20 characters",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
             Spacer(modifier = Modifier.padding(bottom = 14.dp))
             Text(text = stringResource(R.string.email))
             OutlinedTextField(
@@ -167,26 +180,39 @@ private fun ScreenContent(userViewModel: UserViewModel,role: String?,navControll
             Text(text = stringResource(R.string.password))
             OutlinedTextField(
                 value = password,
-                onValueChange = { password = it },
+                onValueChange = { password = it
+                    passwordLengthError = password.length < 8 },
                 shape = RoundedCornerShape(14.dp),
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color.White),
                 label = { Text(text = "Enter your password") },
+                isError = passwordLengthError
             )
+            if (passwordLengthError) {
+                Text(
+                    text = "Password should be at least 8 characters",
+                    color = Color.Red,
+                    style = MaterialTheme.typography.bodyMedium
+                )
+            }
 
             Spacer(modifier = Modifier.padding(bottom = 24.dp))
             Button(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
-                onClick = {nameError = name.isEmpty()
+                onClick = {
+                    nameError = name.isEmpty()
                     emailError = email.isEmpty()
                     addressError = address.isEmpty()
                     passwordError = password.isEmpty()
 
                     if (nameError || emailError || addressError || passwordError) {
+                        if (name.isEmpty() && email.isEmpty() && address.isEmpty() && password.isEmpty()) {
+                            Toast.makeText(context, "Please complete the data first.", Toast.LENGTH_SHORT).show()
+                        }
                         return@Button
                     } else
                         userViewModel.registerUser(User(email = email, name = name, address = address, password = password, role = role ?: ""),password)

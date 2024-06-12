@@ -101,9 +101,7 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
     }
 
     var readOnly by remember { mutableStateOf(true) }
-
     val updateSuccess by userViewModel.updateSuccess.collectAsState()
-
     val updateError by userViewModel.updateError.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -123,7 +121,7 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
 
     LaunchedEffect(updateSuccess) {
         if (updateSuccess) {
-            Toast.makeText(context, "Berhasil Tersimpan", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Update Success", Toast.LENGTH_SHORT).show()
             navController.navigate(Screen.Profile.route) {
                 popUpTo(Screen.Profile.route) { inclusive = true }
             }
@@ -141,7 +139,7 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
     LaunchedEffect(userViewModel.logoutSuccess) {}
     val logoutSuccess =userViewModel.logoutSuccess.collectAsState().value
     if (logoutSuccess) {
-        Toast.makeText(context, "Berhasil Keluar", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, "Logout Success", Toast.LENGTH_SHORT).show()
         userViewModel.resetLogoutState()
     }
 
@@ -200,7 +198,7 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
                         .background(Color.White),
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.baseline_email_24), // Replace with your email icon resource
+                            painter = painterResource(id = R.drawable.baseline_email_24),
                             contentDescription = "Email Icon",
                             modifier = Modifier
                                 .size(24.dp)
@@ -225,7 +223,7 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
                         .background(Color.White),
                     leadingIcon = {
                         Icon(
-                            painter = painterResource(id = R.drawable.baseline_location_on_24), // Replace with your address icon resource
+                            painter = painterResource(id = R.drawable.baseline_location_on_24),
                             contentDescription = "Address Icon",
                             modifier = Modifier
                                 .size(24.dp)
@@ -241,11 +239,15 @@ private fun ScreenContent(userViewModel: UserViewModel, navController: NavHostCo
                         if (readOnly) {
                             readOnly = false
                         } else {
-                            userViewModel.update(name, email, address, onSuccess = {
-                                readOnly = true
-                            }, onFailure = {
-                                Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
-                            })
+                            if (name.isEmpty() || email.isEmpty() || address.isEmpty()) {
+                                Toast.makeText(context, "Please complete the data first", Toast.LENGTH_SHORT).show()
+                            } else {
+                                userViewModel.update(name, email, address, onSuccess = {
+                                    readOnly = true
+                                }, onFailure = {
+                                    Toast.makeText(context, "Error: ${it.message}", Toast.LENGTH_SHORT).show()
+                                })
+                            }
                         }
                     },
                     modifier = Modifier

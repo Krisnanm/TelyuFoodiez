@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -84,7 +83,7 @@ private fun ScreenContent(
     LaunchedEffect(loginSuccess) {
         if (role.isNotEmpty()) {
             if (loginSuccess) {
-                Toast.makeText(context, "Login Berhasil", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Login Success", Toast.LENGTH_SHORT).show()
                 when (role) {
                     "penjual" -> navController.navigate(Screen.TermsPenjual.route)
                     "pembeli" -> navController.navigate(Screen.Dashboard.route)
@@ -97,7 +96,7 @@ private fun ScreenContent(
 
     LaunchedEffect(loginError) {
         loginError?.let {
-            Toast.makeText(context, "Login Gagal: $it", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, "Login Failed: $it", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -159,6 +158,9 @@ private fun ScreenContent(
                     passwordError = password.isEmpty()
 
                     if (emailError || passwordError) {
+                        if (email.isEmpty() && password.isEmpty()) {
+                            Toast.makeText(context, "Please complete the data first.", Toast.LENGTH_SHORT).show()
+                        }
                         return@Button
                     } else
                         userViewModel.loginUser(email, password)

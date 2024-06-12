@@ -25,7 +25,6 @@ import org.d3if3104.myapplication.ui.screen.auth.LoginScreen
 import org.d3if3104.myapplication.ui.screen.auth.Register
 import org.d3if3104.myapplication.ui.screen.pembeli.checkout.CheckoutScreen
 import org.d3if3104.myapplication.ui.screen.dashboard.DashboardScreen
-import org.d3if3104.myapplication.ui.screen.pembeli.detail.DetailOrderScreen
 import org.d3if3104.myapplication.ui.screen.pembeli.detail.DetailTenant
 import org.d3if3104.myapplication.ui.screen.notification.NotificationScreen
 import org.d3if3104.myapplication.ui.screen.penjual.ConditionPenjual
@@ -99,9 +98,6 @@ fun SetupNavGraph() {
             }
             composable(route = Screen.Terms.route) {
                 TermsConditionScreen(navController)
-            }
-            composable(route = Screen.DetailOrder.route) {
-                DetailOrderScreen(navController)
             }
             composable(route = Screen.Notification.route) {
                 NotificationScreen(navController)
