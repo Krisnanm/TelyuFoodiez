@@ -5,4 +5,7 @@ data class CartItem(
     val name: String = "",
     val price: Int = 0,
     val quantity: Int = 0
-)
+) {
+    // Konstruktor default tanpa argumen dibutuhkan oleh Firestore untuk deserialisasi
+    constructor() : this("", "", 0, 0)
+}

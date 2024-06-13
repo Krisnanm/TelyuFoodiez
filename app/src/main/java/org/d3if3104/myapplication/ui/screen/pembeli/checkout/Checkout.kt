@@ -151,14 +151,12 @@ fun Item(item: CartItem, viewModel: CartViewModel) {
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        // Assuming you have a way to map item names to image resources
         val imageRes = when (item.name) {
             "Sushi Platter" -> R.drawable.sushi_platter
             "Wagyu Grill" -> R.drawable.wagyu_grill
             "Chicken Grill" -> R.drawable.chicken_grill
             "Grilled Salmon" -> R.drawable.grilled_salmon
-            // Add more cases as needed
-            else -> R.drawable.ordericon // Default image
+            else -> R.drawable.ordericon
         }
 
         Image(

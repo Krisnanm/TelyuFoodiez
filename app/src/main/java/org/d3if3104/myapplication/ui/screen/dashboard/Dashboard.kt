@@ -32,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -96,7 +97,6 @@ private fun ScreenContent(navController: NavHostController,modifier: Modifier) {
                             tint = GrayTextField
                         )
                     }
-
                 }
                 Text(
                     text = stringResource(R.string.address),
@@ -178,7 +178,8 @@ fun MenuCard(navController: NavHostController,image: Int, shopName: Int, timeOpe
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .background(Color.Transparent)
+                .background(Color.Transparent),
+            contentScale = ContentScale.Crop
         )
         Card(onClick = {}, colors = cardColors(containerColor = Color.White)) {
             Column(modifier = Modifier.padding(16.dp)) {

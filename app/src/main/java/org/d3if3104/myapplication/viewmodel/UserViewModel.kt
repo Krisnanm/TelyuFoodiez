@@ -100,19 +100,25 @@ class UserViewModel : ViewModel() {
         }
     }
 
+    // Tambahkan ini di dalam class UserViewModel
+    private val _userName = MutableStateFlow<String>("")
+    val userName: StateFlow<String> = _userName
 
+    // Update fetchUserData untuk menyimpan nama pengguna
     fun fetchUserData(userId: String) {
         viewModelScope.launch {
             try {
                 val user = userRepository.getUserById(userId)
                 _currentUser.value = user
-                _role.value = user!!.role
+                _role.value = user?.role ?: ""
+                _userName.value = user?.name ?: ""
             } catch (e: Exception) {
                 _updateError.value = e.message
                 Log.d("UserViewModel", "Error fetching user data: ${e.message}")
             }
         }
     }
+
 
     fun update(name: String, email: String, address: String, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val userId = _currentUser.value?.uid ?: return

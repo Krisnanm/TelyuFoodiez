@@ -194,7 +194,7 @@ fun MenuItem(navController: NavHostController, menuItem: MenuItemData) {
             Button(
                 onClick = {
                     val cartItem = CartItem(
-                        id = "", // Anda bisa menggunakan ID unik jika diperlukan
+                        id = "", // ID akan diisi oleh Firestore
                         name = menuItem.title,
                         price = menuItem.price.replace("Rp", "").replace(".", "").toInt(),
                         quantity = 1
