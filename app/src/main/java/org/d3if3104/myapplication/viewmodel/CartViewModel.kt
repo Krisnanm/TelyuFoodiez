@@ -9,9 +9,11 @@ import org.d3if3104.myapplication.firebase.CartRepository
 import org.d3if3104.myapplication.model.CartItem
 
 class CartViewModel : ViewModel() {
+
     private val cartRepository = CartRepository()
+
     private val _cartItems = MutableStateFlow<List<CartItem>>(emptyList())
-    val cartItems: StateFlow<List<CartItem>> get() = _cartItems
+    val cartItems: StateFlow<List<CartItem>> = _cartItems
 
     init {
         fetchCartItems()
@@ -20,47 +22,53 @@ class CartViewModel : ViewModel() {
     private fun fetchCartItems() {
         viewModelScope.launch {
             cartRepository.getCartItems(
-                onCartItemsReceived = { items ->
-                    _cartItems.value = items
-                },
-                onFailure = { e ->
-                    // Handle error
-                }
+                onCartItemsReceived = { items -> _cartItems.value = items },
+                onFailure = { /* handle failure */ }
             )
         }
     }
 
-    fun increaseQuantity(item: CartItem) {
-        viewModelScope.launch {
-            cartRepository.updateQuantity(item.copy(quantity = item.quantity + 1))
+    fun addItemToCart(cartItem: CartItem, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        cartRepository.addItemToCart(cartItem, {
             fetchCartItems()
-        }
+            onSuccess()
+        }, onFailure)
+    }
+
+    fun increaseQuantity(item: CartItem) {
+        val updatedItem = item.copy(quantity = item.quantity + 1)
+        updateItemInCart(updatedItem)
     }
 
     fun decreaseQuantity(item: CartItem) {
         if (item.quantity > 1) {
-            viewModelScope.launch {
-                cartRepository.updateQuantity(item.copy(quantity = item.quantity - 1))
-                fetchCartItems()
-            }
+            val updatedItem = item.copy(quantity = item.quantity - 1)
+            updateItemInCart(updatedItem)
+        } else {
+            removeItemFromCart(item)
         }
     }
 
-    fun addItemToCart(
-        cartItem: CartItem,
-        onSuccess: () -> Unit,
-        onFailure: (Exception) -> Unit
-    ) {
+    private fun updateItemInCart(item: CartItem) {
         viewModelScope.launch {
-            try {
-                cartRepository.addItemToCart(
-                    cartItem = cartItem,
-                    onSuccess = onSuccess,
-                    onFailure = onFailure
-                )
-            } catch (e: Exception) {
-                onFailure(e)
-            }
-            }
+            cartRepository.updateQuantity(item)
+            fetchCartItems()
         }
+    }
+
+    private fun removeItemFromCart(item: CartItem) {
+        viewModelScope.launch {
+            cartRepository.removeItemFromCart(item)
+            fetchCartItems()
+        }
+    }
+
+    fun clearCart(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        viewModelScope.launch {
+            cartRepository.clearCart({
+                _cartItems.value = emptyList()
+                onSuccess()
+            }, onFailure)
+        }
+    }
 }

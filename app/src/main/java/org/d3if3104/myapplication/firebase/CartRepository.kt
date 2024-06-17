@@ -4,7 +4,6 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import org.d3if3104.myapplication.model.CartItem
-import org.d3if3104.myapplication.model.MenuItemData
 
 class CartRepository {
     private val auth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -19,7 +18,9 @@ class CartRepository {
             db.collection("carts").document(it.uid).collection("items")
                 .get()
                 .addOnSuccessListener { result ->
-                    val items = result.map { doc -> doc.toObject(CartItem::class.java) }
+                    val items = result.map { doc ->
+                        doc.toObject(CartItem::class.java).copy(id = doc.id)
+                    }
                     onCartItemsReceived(items)
                 }
                 .addOnFailureListener { e -> onFailure(e) }
@@ -29,8 +30,7 @@ class CartRepository {
     fun updateQuantity(item: CartItem) {
         val user = auth.currentUser
         user?.let {
-            val itemRef =
-                db.collection("carts").document(it.uid).collection("items").document(item.id)
+            val itemRef = db.collection("carts").document(it.uid).collection("items").document(item.id)
             itemRef.set(item)
         }
     }
@@ -38,10 +38,37 @@ class CartRepository {
     fun addItemToCart(cartItem: CartItem, onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
         val user = auth.currentUser
         user?.let {
-            db.collection("carts").document(it.uid).collection("items")
-                .add(cartItem) // Mengganti item dengan cartItem
+            val itemsCollection = db.collection("carts").document(it.uid).collection("items")
+            val newItemRef = itemsCollection.document()
+            newItemRef.set(cartItem.copy(id = newItemRef.id))
                 .addOnSuccessListener { onSuccess() }
                 .addOnFailureListener { e -> onFailure(e) }
-            }
         }
+    }
+
+    fun removeItemFromCart(item: CartItem) {
+        val user = auth.currentUser
+        user?.let {
+            val itemRef = db.collection("carts").document(it.uid).collection("items").document(item.id)
+            itemRef.delete()
+        }
+    }
+
+    fun clearCart(onSuccess: () -> Unit, onFailure: (Exception) -> Unit) {
+        val user = auth.currentUser
+        user?.let {
+            val itemsCollection = db.collection("carts").document(it.uid).collection("items")
+            itemsCollection.get()
+                .addOnSuccessListener { result ->
+                    val batch = db.batch()
+                    result.documents.forEach { doc ->
+                        batch.delete(doc.reference)
+                    }
+                    batch.commit()
+                        .addOnSuccessListener { onSuccess() }
+                        .addOnFailureListener { e -> onFailure(e) }
+                }
+                .addOnFailureListener { e -> onFailure(e) }
+        }
+    }
 }

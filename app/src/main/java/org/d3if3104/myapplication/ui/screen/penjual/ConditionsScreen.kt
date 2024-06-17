@@ -212,14 +212,14 @@ fun LanjutButton(userViewModel: UserViewModel,navController: NavHostController) 
         modifier = Modifier
             .fillMaxWidth()
             .height(56.dp),
-        onClick = { userViewModel.logout(navController) },
+        onClick = { navController.navigate(Screen.HomePenjual.route) },
         shape = RoundedCornerShape(16.dp),
         colors = ButtonDefaults.buttonColors(
             GreenButton, Color.White
         )
     ) {
         Text(
-            text = stringResource(R.string.logout),
+            text = stringResource(R.string.lanjut_button),
             fontSize = 14.sp,
             fontWeight = FontWeight.Bold
         )
